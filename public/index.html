@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  
+    <title>Spiiiike</title>
+    <script type="text/javascript" src="faye.js"></script>
+    <script type="text/javascript" charset="utf-8">
+      var client = new Faye.Client("http://10.27.15.7:3000/faye");
+      client.subscribe('/ws', function(message) {
+         document.getElementById('oshires').innerHTML = message.text; 
+      });
+
+      function sendMessage() {
+        var publication = client.publish('/ws', { text: document.getElementById('oshires').innerHTML });
+        publication.callback(function() {
+          alert('Message received by server!');
+        });
+
+        publication.errback(function(error) {
+          alert('There was a problem: ' + error.message);
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <div id="oshires" contenteditable="true">Nothing yet</div> 
+    <a href="#" onclick="sendMessage()">Send Message</a>
+  </body>
+</html>
